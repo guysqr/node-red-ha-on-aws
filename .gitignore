@@ -1,4 +1,3 @@
 .env
-eb-with-efs-out.yaml
 node-red-eb.code-workspace
 efs_mount_dir
