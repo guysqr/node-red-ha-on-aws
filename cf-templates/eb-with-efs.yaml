@@ -1,0 +1,520 @@
+Description: >
+  Builds the infrastructure for a high-availability-ready Node-RED instance, 
+  running on EB and using EFS for shared storage. Once set up you will need to 
+  install the built Node-RED app package written to the dist folder.
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: General Configuration
+        Parameters:
+          - AppName
+          - EBEnvironmentName
+      - Label:
+          default: EB Configuration
+        Parameters:
+          - EBSolutionStack
+          - InstanceType
+          - MinSize
+          - MaxSize
+      - Label:
+          default: Network Placement
+        Parameters:
+          - VPCId
+          - SubnetIdAPublic
+          - SubnetIdBPublic
+          - SubnetIdAPrivate
+          - SubnetIdBPrivate
+      - Label:
+          default: Environment Variables
+        Parameters:
+          - AWSAccessKey
+          - AWSSecretKey
+          - Auth0ClientId
+          - Auth0ClientSecret
+          - Auth0Domain
+          - TwilioAuthToken
+          - BaseUrl
+          - EfsMountDir
+      - Label:
+          default: SSH access (for debugging)
+        Parameters:      
+          - EnableSSHAccess
+          - EC2KeyName
+          - SSHLocation
+      - Label:
+          default: Tags
+        Parameters:
+          - MaintainerTag
+      - Label:
+          default: Optional Parameters
+        Parameters:
+          - AdditionalSecGroup
+          - CertificateArn
+    ParameterLabels:
+      AppName:
+        default: Application Name
+      EBEnvironmentName:
+        default: Application Environment Name
+      AWSAccessKey:
+        default: AWS Access Key
+      AWSSecretKey:
+        default: AWS Secret key
+      EBSolutionStack:
+        default: Platform with runtime
+      InstanceType:
+        default: Instance type
+      VPCId:
+        default: Existing VPC Id
+      SubnetIdAPublic:
+        default: Load Balancer Subnet A (usually a public subnet)
+      SubnetIdBPublic:
+        default: Load Balancer Subnet B (usually a public subnet)
+      SubnetIdAPrivate:
+        default: Instance Subnet A (usually a private subnet)
+      SubnetIdBPrivate:
+        default: Instance Subnet B (usually a private subnet)
+      MaintainerTag:
+        default: Maintainer Name
+      MinSize:
+        default: Minimum number of instances
+      MaxSize:
+        default: Maximum number of instances
+      Auth0ClientId:
+        default: Client ID for Auth0 application
+      Auth0ClientSecret:
+        default: Client secret for the relevant Client ID
+      Auth0Domain:
+        default: Auth0 domain, eg you.auth0.com
+      TwilioAuthToken:
+        default: Twilio Auth Token
+      BaseUrl:
+        default: Base site URL, eg https://host.domain.com
+      EfsMountDir:
+        default: Mount path for EFS volume
+      EC2KeyName:
+        default: SSH Key name to access EC2
+      EnableSSHAccess:
+        default: Enable SSH access to the hosts?
+      SSHLocation:
+        default: Whitelisted CIDR block
+Parameters:
+    # VPC and subnets
+  AppName:
+    ConstraintDescription: must contain only alphanumeric characters with optional
+      spaces and hyphen. Length between 4 and 20
+    Default: Node-RED
+    Description: App name to be used in creating EB
+    MinLength: 4
+    MaxLength: 30
+    AllowedPattern: '[a-z\-A-Z0-9\s]+'
+    Type: String
+  EBEnvironmentName:
+    ConstraintDescription: must contain only alphanumeric characters with optional
+      spaces and hyphen. length between 4 and 40
+    Default: node-red
+    Description: Environment name to be used for the EB app
+    MinLength: 4
+    MaxLength: 40
+    AllowedPattern: '[a-z\-A-Z0-9\s]+'
+    Type: String
+  EBSolutionStack: 
+    Description: ${ebstack}
+    Type: String
+  InstanceType:
+    ConstraintDescription: must be a valid instance type.
+    Description: EC2 Instance Type with PV
+    Default: t3.medium
+    Type: String
+    AllowedValues:
+      - t3.micro
+      - t3.small
+      - t3.medium
+      - t3.large
+  VPCId:
+    ConstraintDescription: must be the ID of existing VPC. If no VPC exists, create
+      one.
+    Description: You must have a valid VPC created before using this template
+    Default: vpc-e4f2da81
+    Type: AWS::EC2::VPC::Id
+  SubnetIdAPublic:
+    ConstraintDescription: subnet A is invalid.
+    Description: The subnet must be a public subnet
+    Default: subnet-128d8565
+    Type: AWS::EC2::Subnet::Id
+  SubnetIdBPublic:
+    ConstraintDescription: subnet is invalid.
+    Description: The subnet must be a public subnet
+    Default: subnet-3b8a645f
+    Type: AWS::EC2::Subnet::Id
+  SubnetIdAPrivate:
+    ConstraintDescription: subnet A is invalid.
+    Description: The subnet must be a private subnet
+    Default: subnet-118d8566
+    Type: AWS::EC2::Subnet::Id
+  SubnetIdBPrivate:
+    ConstraintDescription: subnet is invalid.
+    Description: The subnet must be a private subnet
+    Default: subnet-048a6460
+    Type: AWS::EC2::Subnet::Id
+  AdditionalSecGroup:
+    ConstraintDescription: must be valid sec group.
+    Description: Additional security group of the RDS for access from EB
+    Default: ""
+    Type: String
+  EC2KeyName:
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+    Description: Must have an existing SSH key pair
+    Type: AWS::EC2::KeyPair::KeyName
+  EnableSSHAccess:
+    ConstraintDescription: must be valid string for name.
+    Description: only say yes if you need SSH access to the host
+    Default: 'no'
+    AllowedValues:
+      - 'yes'
+      - 'no'
+    Type: String
+  SSHLocation:
+    Description: The IP range to allow access from
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: Must be a valid IP CIDR range of the form x.x.x.x/x.
+  AWSAccessKey:
+    ConstraintDescription: must be valid characters
+    Description: An AWS Access Key for the app
+    AllowedPattern: '[a-z\-A-Z0-9\s\./_]+'
+    Type: String
+    Default: '-'
+  AWSSecretKey:
+    ConstraintDescription: must be valid characters
+    Description: The matching AWS Secret Key
+    AllowedPattern: '[a-z\-A-Z0-9\s\./_\+]+'
+    Type: String
+    Default: '-'
+  # autoscaling
+  MinSize:
+    ConstraintDescription: must be valid number of instances
+    Description: minimum size is recommended to be >= 2
+    Default: '1'
+    MinLength: 1
+    MaxLength: 1
+    AllowedPattern: '[0-9]{1,1}'
+    Type: String
+  MaxSize:
+    ConstraintDescription: must be valid number of instances
+    Description: maximum size is recommended to be <= 9
+    Default: '4'
+    MinLength: 1
+    MaxLength: 1
+    AllowedPattern: '[0-9]{1,1}'
+    Type: String
+  MaintainerTag:
+    Description: Tag for the maintainer of the infrastructure
+    MinLength: 2
+    MaxLength: 30
+    AllowedPattern: '[a-zA-Z0-9\s\-]+'
+    Type: String
+    Default: Guy Morton
+    ConstraintDescription: must be a valid tag string between 4 to 20 characters
+  Auth0ClientId:
+    Description: Client ID for Auth0 application
+    MinLength: 0
+    MaxLength: 32
+    AllowedPattern: '[a-zA-Z0-9]+'
+    Type: String
+    Default: '12345'
+    ConstraintDescription: must be 32 alphanumeric characters
+  Auth0ClientSecret:
+    Description: Client secret for the relevant Client ID
+    MinLength: 0
+    MaxLength: 64
+    AllowedPattern: '[a-zA-Z0-9_\-]+'
+    Type: String
+    Default: '-'
+    ConstraintDescription: must be 64 alphanumeric characters + _ and -
+  Auth0Domain:
+    Description: Auth0 domain, eg you.auth0.com
+    MinLength: 10
+    MaxLength: 256
+    AllowedPattern: '[a-zA-Z0-9_\.\-]+'
+    Type: String
+    Default: you.auth0.com
+    ConstraintDescription: FQDN eg you.auth0.com
+  TwilioAuthToken:
+    Description: Twilio Auth Token
+    MinLength: 32
+    MaxLength: 32
+    AllowedPattern: '[a-z0-9]+'
+    Type: String
+    Default: '-'
+    ConstraintDescription: Get it from the Twilio console    
+  BaseUrl:
+    Description: Base URL 
+    MinLength: 0
+    MaxLength: 256
+    AllowedPattern: '[a-z0-9\-\.:\/]+'
+    Type: String
+    Default: http://host.domain.com
+    ConstraintDescription: eg https://host.domain.com
+  EfsMountDir:
+    Description: Mount path for EFS volume
+    MinLength: 1
+    MaxLength: 50
+    AllowedPattern: '[a-z0-9\/\-_]+'
+    Type: String
+    Default: /efs
+    ConstraintDescription: valid mount path eg /efs
+  CertificateArn:
+    Description: Certificate ARN (optional)
+    Default: ""
+    Type: String
+    ConstraintDescription: Valid ACM ARN
+Conditions:
+  NoSSL: !Equals [!Ref CertificateArn, ""]
+  DoEnableSSHAccess: !Equals
+    - !Ref 'EnableSSHAccess'
+    - 'yes'
+Resources:
+  Application:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      ApplicationName: 
+        Ref: AppName
+  Environment:
+    DependsOn: Application
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties:
+      ApplicationName:
+        Ref: AppName
+      EnvironmentName: 
+        Ref: EBEnvironmentName
+      TemplateName: 
+        Ref: EBConfigurationTemplate
+      Tags:
+        - Key: Maintainer
+          Value: 
+            Ref: MaintainerTag
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+        GroupDescription: Allow EFS connectivity
+        VpcId:
+          Ref: VPCId
+  SSHSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    # Condition: DoEnableSSHAccess
+    Properties:
+      GroupDescription: !Sub 'Enable SSH access.'
+      VpcId: !Ref 'VPCId'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref 'SSHLocation'
+  EBConfigurationTemplate:
+    DependsOn: 
+      - InstanceSecurityGroup
+      - FileSystem
+      - SSHSecurityGroup
+    Type: AWS::ElasticBeanstalk::ConfigurationTemplate
+    Properties:
+      SolutionStackName: 
+        Ref: EBSolutionStack
+      ApplicationName: 
+        Ref: AppName
+      Description: 
+        Fn::Sub: 'EB config template'
+      OptionSettings:
+        - Namespace: aws:autoscaling:asg
+          OptionName: MinSize
+          Value: 
+            Ref: MinSize
+        - Namespace: aws:autoscaling:asg
+          OptionName: MaxSize
+          Value: 
+            Ref: MaxSize
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: EC2KeyName
+          Value: !Ref 'EC2KeyName'
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: EnvironmentType
+          Value: LoadBalanced
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: LoadBalancerType
+          Value: application
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: ServiceRole
+          Value: aws-elasticbeanstalk-service-role
+        - Namespace: aws:elbv2:listener:80
+          OptionName: Protocol
+          Value: HTTP        
+        - Namespace: aws:elbv2:listener:443
+          OptionName: Protocol
+          Value: 
+            Fn::If: [ NoSSL, HTTP, HTTPS ]
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: InstanceType
+          Value: 
+            Ref: InstanceType
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: IamInstanceProfile
+          Value: aws-elasticbeanstalk-ec2-role
+        - Namespace: aws:autoscaling:trigger
+          OptionName: MeasureName
+          Value: UnhealthyHostCount
+        - Namespace: aws:autoscaling:trigger
+          OptionName: Statistic
+          Value: Minimum
+        - Namespace: aws:autoscaling:trigger
+          OptionName: LowerThreshold
+          Value: 0
+        - Namespace: aws:autoscaling:trigger
+          OptionName: LowerBreachScaleIncrement
+          Value: 0
+        - Namespace: aws:autoscaling:trigger
+          OptionName: UpperThreshold
+          Value: 1
+        - Namespace: aws:autoscaling:trigger
+          OptionName: UpperBreachScaleIncrement
+          Value: 1
+        - Namespace: aws:autoscaling:trigger
+          OptionName: Unit
+          Value: Count/Second
+        - Namespace: aws:autoscaling:trigger
+          OptionName: BreachDuration
+          Value: 2
+        - Namespace: aws:autoscaling:trigger
+          OptionName: Period
+          Value: 3
+        - Namespace: aws:elasticbeanstalk:healthreporting:system
+          OptionName: SystemType
+          Value: enhanced
+        - Namespace: aws:elasticbeanstalk:environment:process:default
+          OptionName: HealthCheckPath
+          Value: /
+        - Namespace: aws:ec2:vpc
+          OptionName: VPCId
+          Value: 
+            Ref: 'VPCId'
+        - Namespace: aws:ec2:vpc
+          OptionName: ELBSubnets
+          Value: 
+            Fn::Join:
+              - ", "
+              - - !Ref SubnetIdAPublic
+                - !Ref SubnetIdBPublic
+        - Namespace: aws:ec2:vpc
+          OptionName: Subnets
+          Value: 
+            Fn::Join:
+              - ", "
+              - - !Ref SubnetIdAPrivate
+                - !Ref SubnetIdBPrivate
+        - Namespace: aws:ec2:vpc
+          OptionName: AssociatePublicIpAddress
+          Value: false
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: AWS_ACCESS_KEY_ID
+          Value: !Ref 'AWSAccessKey'
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: AWS_SECRET_ACCESS_KEY
+          Value: !Ref 'AWSSecretKey'
+          #Auth0 settings
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: AUTH0_CLIENT_ID
+          Value: !Ref 'Auth0ClientId'
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: AUTH0_CLIENT_SECRET
+          Value: !Ref 'Auth0ClientSecret'
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: AUTH0_DOMAIN
+          Value: !Ref 'Auth0Domain'
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: TWILIO_AUTH_TOKEN
+          Value: !Ref 'TwilioAuthToken'
+          #EFS config
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: EFS_FILE_SYSTEM_ID
+          Value: !Ref 'FileSystem'
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: EFS_REGION
+          Value: !Ref AWS::Region
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: EFS_MOUNT_DIR
+          Value: !Ref 'EfsMountDir'
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: BASE_URL
+          Value: !Ref 'BaseUrl'
+          #set security groups
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: SecurityGroups
+          Value:
+            Fn::Join:
+              - ','
+              - - !Ref InstanceSecurityGroup
+                - !Ref AdditionalSecGroup
+                - !If
+                  - DoEnableSSHAccess
+                  - !Ref 'SSHSecurityGroup'
+                  - ''
+  FileSystem:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      FileSystemTags:
+      - Key: Name
+        Value: 
+          Fn::Join:
+              - '-'
+              - - !Ref AppName
+                - "efs"
+      PerformanceMode: "generalPurpose"
+      Encrypted: "true"
+
+## Mount Target Resources
+  MountTargetA:
+    DependsOn: 
+      - FileSystem
+      - MountTargetSecurityGroup
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref FileSystem
+      SecurityGroups:
+      - !Ref MountTargetSecurityGroup
+      SubnetId:
+        Ref: SubnetIdAPrivate
+  MountTargetB:
+    DependsOn: 
+      - FileSystem
+      - MountTargetSecurityGroup
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref FileSystem
+      SecurityGroups:
+      - !Ref MountTargetSecurityGroup
+      SubnetId:
+        Ref: SubnetIdBPrivate
+
+  MountTargetSecurityGroup:
+    DependsOn: InstanceSecurityGroup
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for mount target
+      SecurityGroupIngress:
+      - FromPort: '2049'
+        IpProtocol: tcp
+        SourceSecurityGroupId:
+          Ref: InstanceSecurityGroup
+        ToPort: '2049'
+      VpcId:
+        Ref: VPCId
+
+Outputs:
+  FileSystem:
+    Description: The Filesystem ID
+    Value: !Ref FileSystem
+  EndpointURL:
+    Description: DNS Name
+    Value: !GetAtt Environment.EndpointURL
