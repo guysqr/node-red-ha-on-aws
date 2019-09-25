@@ -37,6 +37,13 @@ If you don't have a VPC set up in your account yet, the vpc-privatepublic.yaml t
 
 ### Creating the EB stack
 
+Before you begin, make sure the following Elastic Beanstalk IAM roles have been created in your AWS account:
+
+```
+aws-elasticbeanstalk-ec2-role
+aws-elasticbeanstalk-service-role
+```
+
 There is a CloudFormation template `eb-with-efs.yaml` in the cf-templates directory, and a helper python script you can use to create a fresh version if you want to stand this up in a region other than ap-southeast-2 (Sydney). The python script will populate the EB solution stacks section with the ones available in the region your AWS CLI is configured to use (check `aws configure`, and install aws cli tools if you don't have them). 
 
 Running
