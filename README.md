@@ -128,9 +128,9 @@ You do this by installing them locally, and using the --save option to write the
 
 ### Managing flow file changes
 
-As mentioned above, flow files are not stored in this repo and are not deployed via this process - they are stored on the EFS volume. 
+As mentioned above, flow files are not stored in this repo and are not deployed via this process - they are stored on the EFS volume. When an individual instance changes a flow, the filesystem watcher in nodemon (under which Node-RED runs) restarts it's NR instance to reload the flows. It's a bit of a brute-force approach to a problem that has no simple answer, unfortunately, but it works.
 
-I recommend you use Projects in Node-RED to leverage git for managing flows within your deployed Node-RED instances. I have enabled them in the settings.js file.
+NB: I recommend you use Projects in Node-RED to leverage git for managing flows within your deployed Node-RED instances. I have enabled them in the settings.js file.
 
 ## Troubleshooting
 
