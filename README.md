@@ -1,6 +1,6 @@
 # Node-RED for Elastic Beanstalk, with HA and CI/CD
 
-This project is a Node-RED setup designed to run as part of the HA configuration on Elastic beanstalk with EFS. Node-RED shares state by using EFS for storage, which means all instances share the same flows, credentials etc. Configuration is passed in from the environment, so minimal config is kept within this filesystem.
+This project creates a Node-RED setup designed to run in a HA configuration using AWS Elastic Beanstalk and EFS. Node-RED shares state by using EFS for storage, which means all instances share the same flows, credentials etc. Configuration is passed in from the environment, so minimal config is kept within this filesystem.
 
 ## Running locally
 
