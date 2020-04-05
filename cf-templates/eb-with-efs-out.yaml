@@ -123,61 +123,77 @@ Parameters:
       application is compatible with the selected platform.
     ConstraintDescription: Invalid runtime environment value
     AllowedValues: 
-      -  64bit Amazon Linux 2018.03 v4.9.2 running Node.js
-      -  64bit Amazon Linux 2018.03 v4.8.3 running Node.js
-      -  64bit Amazon Linux 2018.03 v2.8.12 running PHP 5.4
-      -  64bit Amazon Linux 2018.03 v2.8.12 running PHP 5.5
-      -  64bit Amazon Linux 2018.03 v2.8.12 running PHP 5.6
-      -  64bit Amazon Linux 2018.03 v2.8.12 running PHP 7.0
-      -  64bit Amazon Linux 2018.03 v2.8.12 running PHP 7.1
-      -  64bit Amazon Linux 2018.03 v2.8.12 running PHP 7.2
-      -  64bit Amazon Linux 2018.03 v2.8.6 running Python 3.6
-      -  64bit Amazon Linux 2018.03 v2.8.6 running Python 3.4
-      -  64bit Amazon Linux 2018.03 v2.8.6 running Python
-      -  64bit Amazon Linux 2018.03 v2.8.6 running Python 2.7
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.6 (Puma)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.5 (Puma)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.4 (Puma)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.3 (Puma)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.2 (Puma)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.1 (Puma)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.0 (Puma)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.6 (Passenger Standalone)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.5 (Passenger Standalone)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.4 (Passenger Standalone)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.3 (Passenger Standalone)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.2 (Passenger Standalone)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.1 (Passenger Standalone)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 2.0 (Passenger Standalone)
-      -  64bit Amazon Linux 2018.03 v2.9.6 running Ruby 1.9.3
-      -  64bit Amazon Linux 2018.03 v3.1.6 running Tomcat 8.5 Java 8
-      -  64bit Amazon Linux 2018.03 v3.1.6 running Tomcat 8 Java 8
-      -  64bit Amazon Linux 2018.03 v3.1.6 running Tomcat 7 Java 7
-      -  64bit Amazon Linux 2018.03 v3.1.6 running Tomcat 7 Java 6
-      -  64bit Windows Server Core 2016 v2.1.0 running IIS 10.0
-      -  64bit Windows Server 2016 v2.1.0 running IIS 10.0
-      -  64bit Windows Server Core 2012 R2 v2.1.0 running IIS 8.5
-      -  64bit Windows Server 2012 R2 v2.1.0 running IIS 8.5
+      -  64bit Amazon Linux 2018.03 v4.14.1 running Node.js
+      -  64bit Amazon Linux 2018.03 v2.9.4 running PHP 5.4
+      -  64bit Amazon Linux 2018.03 v2.9.4 running PHP 5.5
+      -  64bit Amazon Linux 2018.03 v2.9.4 running PHP 5.6
+      -  64bit Amazon Linux 2018.03 v2.9.4 running PHP 7.0
+      -  64bit Amazon Linux 2018.03 v2.9.4 running PHP 7.1
+      -  64bit Amazon Linux 2018.03 v2.9.4 running PHP 7.2
+      -  64bit Amazon Linux 2018.03 v2.9.4 running PHP 7.3
+      -  64bit Amazon Linux 2017.09 v2.6.0 running PHP 7.1
+      -  64bit Amazon Linux 2017.03 v2.4.2 running PHP 7.0
+      -  64bit Amazon Linux 2018.03 v2.9.7 running Python 3.6
+      -  64bit Amazon Linux 2018.03 v2.9.7 running Python 3.4
+      -  64bit Amazon Linux 2018.03 v2.9.7 running Python
+      -  64bit Amazon Linux 2018.03 v2.9.7 running Python 2.7
+      -  64bit Amazon Linux 2018.03 v2.7.2 running Python 3.6
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.6 (Passenger Standalone)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.5 (Passenger Standalone)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.4 (Passenger Standalone)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.3 (Passenger Standalone)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.2 (Passenger Standalone)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.1 (Passenger Standalone)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.0 (Passenger Standalone)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 1.9.3
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.6 (Puma)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.5 (Puma)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.4 (Puma)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.3 (Puma)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.2 (Puma)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.1 (Puma)
+      -  64bit Amazon Linux 2018.03 v2.11.4 running Ruby 2.0 (Puma)
+      -  64bit Amazon Linux 2018.03 v3.3.4 running Tomcat 8.5 Java 8
+      -  64bit Amazon Linux 2018.03 v3.3.4 running Tomcat 8 Java 8
+      -  64bit Amazon Linux 2018.03 v3.3.4 running Tomcat 7 Java 7
+      -  64bit Amazon Linux 2018.03 v3.3.4 running Tomcat 7 Java 6
+      -  64bit Amazon Linux 2016.03 v2.2.0 running Tomcat 8 Java 8
+      -  64bit Windows Server Core 2019 v2.5.2 running IIS 10.0
+      -  64bit Windows Server 2019 v2.5.2 running IIS 10.0
+      -  64bit Windows Server Core 2016 v2.5.2 running IIS 10.0
+      -  64bit Windows Server 2016 v2.5.2 running IIS 10.0
+      -  64bit Windows Server Core 2012 R2 v2.5.2 running IIS 8.5
+      -  64bit Windows Server 2012 R2 v2.5.2 running IIS 8.5
+      -  64bit Windows Server 2019 v2.5.1 running IIS 10.0
+      -  64bit Windows Server Core 2016 v2.5.1 running IIS 10.0
+      -  64bit Windows Server Core 2016 v2.5.0 running IIS 10.0
+      -  64bit Windows Server 2016 v2.5.0 running IIS 10.0
+      -  64bit Windows Server Core 2019 v2.4.0 running IIS 10.0
+      -  64bit Windows Server 2019 v2.4.0 running IIS 10.0
       -  64bit Windows Server Core 2016 v1.2.0 running IIS 10.0
       -  64bit Windows Server 2016 v1.2.0 running IIS 10.0
       -  64bit Windows Server Core 2012 R2 v1.2.0 running IIS 8.5
       -  64bit Windows Server 2012 R2 v1.2.0 running IIS 8.5
       -  64bit Windows Server 2012 v1.2.0 running IIS 8
-      -  64bit Windows Server 2008 R2 v1.2.0 running IIS 7.5
       -  64bit Windows Server Core 2012 R2 running IIS 8.5
       -  64bit Windows Server 2012 R2 running IIS 8.5
       -  64bit Windows Server 2012 running IIS 8
-      -  64bit Windows Server 2008 R2 running IIS 7.5
+      -  64bit Amazon Linux 2018.03 v2.14.3 running Docker 18.09.9-ce
       -  64bit Amazon Linux 2018.03 v2.12.14 running Docker 18.06.1-ce
-      -  64bit Amazon Linux 2018.03 v2.15.0 running Multi-container Docker 18.06.1-ce (Generic)
-      -  64bit Debian jessie v2.12.14 running Go 1.4 (Preconfigured - Docker)
-      -  64bit Debian jessie v2.12.14 running Go 1.3 (Preconfigured - Docker)
-      -  64bit Debian jessie v2.12.14 running Python 3.4 (Preconfigured - Docker)
-      -  64bit Amazon Linux 2018.03 v2.8.6 running Java 8
-      -  64bit Amazon Linux 2018.03 v2.8.6 running Java 7
-      -  64bit Amazon Linux 2018.03 v2.11.4 running Go 1.12.6
-      -  64bit Amazon Linux 2018.03 v2.6.12 running Packer 1.0.3
-      -  64bit Amazon Linux 2018.03 v2.12.14 running GlassFish 5.0 Java 8 (Preconfigured - Docker)
+      -  64bit Amazon Linux 2018.03 v2.20.0 running Multi-container Docker 18.09.9-ce (Generic)
+      -  64bit Amazon Linux 2018.03 v2.11.2 running Multi-container Docker 18.03.1-ce (Generic)
+      -  64bit Debian jessie v2.14.3 running Go 1.4 (Preconfigured - Docker)
+      -  64bit Debian jessie v2.14.3 running Go 1.3 (Preconfigured - Docker)
+      -  64bit Debian jessie v2.14.3 running Python 3.4 (Preconfigured - Docker)
+      -  64bit Amazon Linux 2 v0.1.1 running Docker (BETA)
+      -  64bit Amazon Linux 2 v0.1.1 running Corretto 11 (BETA)
+      -  64bit Amazon Linux 2 v0.1.1 running Corretto 8 (BETA)
+      -  64bit Amazon Linux 2 v0.1.0 running Python 3.7 (BETA)
+      -  64bit Amazon Linux 2018.03 v2.10.4 running Java 8
+      -  64bit Amazon Linux 2018.03 v2.10.4 running Java 7
+      -  64bit Amazon Linux 2018.03 v2.15.1 running Go 1.14.1
+      -  64bit Amazon Linux 2018.03 v2.6.20 running Packer 1.0.3
+      -  64bit Amazon Linux 2018.03 v2.14.3 running GlassFish 5.0 Java 8 (Preconfigured - Docker)
     Type: String
   InstanceType:
     ConstraintDescription: must be a valid instance type.
@@ -303,9 +319,9 @@ Parameters:
     ConstraintDescription: FQDN eg you.auth0.com
   TwilioAuthToken:
     Description: Twilio Auth Token
-    MinLength: 32
+    MinLength: 0
     MaxLength: 32
-    AllowedPattern: '[a-z0-9]+'
+    AllowedPattern: '[a-z0-9\-]+'
     Type: String
     Default: '-'
     ConstraintDescription: Get it from the Twilio console    

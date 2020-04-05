@@ -245,9 +245,9 @@ Parameters:
     ConstraintDescription: FQDN eg you.auth0.com
   TwilioAuthToken:
     Description: Twilio Auth Token
-    MinLength: 32
+    MinLength: 0
     MaxLength: 32
-    AllowedPattern: '[a-z0-9]+'
+    AllowedPattern: '[a-z0-9\-]+'
     Type: String
     Default: '-'
     ConstraintDescription: Get it from the Twilio console    
