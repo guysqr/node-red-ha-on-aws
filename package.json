@@ -27,7 +27,7 @@
     "node-red-contrib-re-postgres": "^0.2.2",
     "node-red-contrib-redis": "^1.1.7",
     "node-red-contrib-twilio-ivr": "0.0.3",
-    "node-red-dashboard": ">=2.17.0",
+    "node-red-dashboard": ">=2.26.2",
     "node-red-node-mysql": "0.0.17",
     "node-red-node-twilio": "^0.1.0",
     "nodemon": "^1.19.1",
