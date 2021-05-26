@@ -1,3 +1,4 @@
 .env
 node-red-eb.code-workspace
 efs_mount_dir
+node_modules
