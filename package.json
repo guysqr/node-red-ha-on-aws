@@ -10,6 +10,7 @@
     "aws-sdk": "^2.403.0",
     "bcrypt": "^5.0.0",
     "chokidar": "^3.0.2",
+    "css-what": ">=5.0.1",
     "dotenv": "^6.2.0",
     "express-jwt": "^6.0.0",
     "express-session": "^1.15.6",
