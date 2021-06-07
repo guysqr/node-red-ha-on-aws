@@ -19,6 +19,7 @@
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^1.3.0",
+    "netmask": ">=2.0.1",
     "node-red": "^1.3.5",
     "node-red-contrib-aws": "^0.5.0",
     "node-red-contrib-aws-sdk-anything": "^0.3.0",
