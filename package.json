@@ -13,7 +13,10 @@
     "node-red-contrib-https": "^1.0.0",
     "nodemon": "^2.0.7",
     "passport": "^0.4.1",
-    "passport-auth0": "^1.4.0"
+    "passport-auth0": "^1.4.0",
+    "ws": ">=6.2.2",
+    "css-what": ">=5.0.1",
+    "bcrypt": ">=5.0.0"
   },
   "devDependencies": {
     "del": ">=3.0.0",
