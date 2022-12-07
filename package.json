@@ -11,7 +11,7 @@
     "css-what": ">=6.1.0",
     "dotenv": "^16.0.1",
     "https": "^1.0.0",
-    "node-red": "^2.2.2",
+    "node-red": "^3.0.2",
     "node-red-contrib-https": "^2.0.0",
     "nodemon": "^2.0.16",
     "passport": "^0.6.0",
